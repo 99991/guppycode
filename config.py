@@ -14,6 +14,7 @@ parser.add_argument("--system-prompt", default="You are inside an Ubuntu 24.04 d
 parser.add_argument("--no-network", action="store_false", default=False, help="Disallow agent to access the network (default: allowed)")
 parser.add_argument("--nvidia", action="store_true", default=False, help="Enable NVIDIA GPU passthrough (default: disabled)")
 parser.add_argument("--prompt", "-p", help="Prompt to run in single-shot non-interactive mode")
+parser.add_argument("--docker-image", default="torchimage", help="Docker image to use for sandboxed execution")
 parser.add_argument("--dangerous-no-sandbox", action="store_true", default=False, help="Enable NVIDIA GPU passthrough (default: sandboxed)")
 args = parser.parse_args()
 

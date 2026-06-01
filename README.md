@@ -23,7 +23,11 @@ ln -s "$PWD/gup.py" ~/.local/bin/guppy
 guppy
 ```
 
-Or just run `python gup.py`. For usage, see `guppy --help`
+For usage, see `guppy --help`
+
+Instead of running `./build_docker.sh` to build `torchimage`, you can also specify your own Docker image with `guppy --docker-image yourimage`
+
+You can also run `python gup.py` directly instead of linking `guppy` into a directory on your `$PATH`.
 
 By default, `guppy` currently uses DeepSeek-V4-Flash through OpenRouter (`export GUPPY_KEY='your API key here'`).
 If you want to use a local model with [llama-server](https://github.com/ggml-org/llama.cpp#quick-start), run

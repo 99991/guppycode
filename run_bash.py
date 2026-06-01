@@ -65,7 +65,7 @@ def run_bash(command_str: str, timeout: float = 30.0) -> str:
             command += nvidia_args
 
         command += [
-            "torchimage",
+            config.args.docker_image,
             "bash", "-ilc", command_str,
         ]
 
