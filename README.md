@@ -1,5 +1,9 @@
 # GupPyCode
 
+<div align="center">
+<img width="535" height="334" alt="guppy2" src="https://github.com/user-attachments/assets/652bed3b-a11d-44ae-acaa-3b87dc6f6315" />
+</div>
+
 This is mostly for my own use on Lubuntu 24.04 with weird defaults.
 It will probably not work on your system and might contain bugs.
 
@@ -10,18 +14,19 @@ Consider this repository mostly educational.
 
 Go to whichever directory you want to install it in and run
 
-```
+```bash
 git clone https://github.com/99991/GupPyCode.git
 cd GupPyCode
 ln -s "$PWD/gup.py" ~/.local/bin/guppy
+guppy
 ```
 
 Or just run `python gup.py`. For usage, see `guppy --help`
 
-By default, `guppy` currently uses DeepSeek-V4-Flash through OpenRouter (`export GUPPY_KEY='your API key here').
+By default, `guppy` currently uses DeepSeek-V4-Flash through OpenRouter (`export GUPPY_KEY='your API key here'`).
 If you want to use a local model with [llama-server](https://github.com/ggml-org/llama.cpp#quick-start), run
 
-```
+```bash
 guppy --url http://127.0.0.1:8080/v1/chat/completions
 ```
 
