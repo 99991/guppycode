@@ -22,8 +22,6 @@ while True:
 
             response = llm.call_llm(messages)
 
-            print(json.dumps(response, indent=4))
-
             if "cost" in response["usage"]:
                 cost = response["usage"]["cost"]
                 total_cost += cost
