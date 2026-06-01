@@ -14,6 +14,7 @@ parser.add_argument("--system-prompt", default="You are inside an Ubuntu 24.04 d
 parser.add_argument("--no-network", action="store_false", default=False, help="Disallow agent to access the network (default: allowed)")
 parser.add_argument("--nvidia", action="store_true", default=False, help="Enable NVIDIA GPU passthrough (default: disabled)")
 parser.add_argument("--prompt", "-p", help="Prompt to run in single-shot non-interactive mode")
+parser.add_argument("--dangerous-no-sandbox", action="store_true", default=False, help="Enable NVIDIA GPU passthrough (default: sandboxed)")
 args = parser.parse_args()
 
 if args.model == "pro":
@@ -22,7 +23,12 @@ if args.model == "pro":
 prn.green("Config")
 for arg in vars(args):
     value = getattr(args, arg)
+
     if value is not None:
-        print(f"    {arg:15}: {value}")
+        if arg == "dangerous_no_sandbox":
+            if args.dangerous_no_sandbox:
+                prn.orange("WARNING: SANDBOX IS TURNED OFF!")
+        else:
+            print(f"    {arg:15}: {value}")
 
 api_key = os.environ.get("GUPPY_KEY")

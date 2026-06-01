@@ -34,36 +34,40 @@ nvidia_args = """
 """.strip().split()
 
 def run_bash(command_str: str, timeout: float = 30.0) -> str:
-    current_directory = os.getcwd()
 
-    sandboxing_args = [
-        "--security-opt", "no-new-privileges",
-        "--cap-drop=ALL",
-        "--memory", "8192m",
-        "--memory-swap", "8192m",
-        "--cpus=4",
-    ]
+    if config.args.dangerous_no_sandbox:
+        command = ["bash", "-c", command_str]
+    else:
+        current_directory = os.getcwd()
 
-    if config.args.no_network:
-        sandboxing_args.append("--network=none")
+        sandboxing_args = [
+            "--security-opt", "no-new-privileges",
+            "--cap-drop=ALL",
+            "--memory", "8192m",
+            "--memory-swap", "8192m",
+            "--cpus=4",
+        ]
 
-    command = [
-        "docker",
-        "run",
-        "--rm",
-        "--volume", current_directory + ":/work",
-        "-w", "/work",
-    ]
+        if config.args.no_network:
+            sandboxing_args.append("--network=none")
 
-    command += sandboxing_args
+        command = [
+            "docker",
+            "run",
+            "--rm",
+            "--volume", current_directory + ":/work",
+            "-w", "/work",
+        ]
 
-    if config.args.nvidia:
-        command += nvidia_args
+        command += sandboxing_args
 
-    command += [
-        "torchimage",
-        "bash", "-ilc", command_str,
-    ]
+        if config.args.nvidia:
+            command += nvidia_args
+
+        command += [
+            "torchimage",
+            "bash", "-ilc", command_str,
+        ]
 
     try:
         result = subprocess.run(command, capture_output=True, timeout=timeout)
