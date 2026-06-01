@@ -57,7 +57,7 @@ def run_bash(command_str: str, timeout: float = 30.0) -> str:
 
     command += sandboxing_args
 
-    if not config.args.no_nvidia:
+    if config.args.nvidia:
         command += nvidia_args
 
     command += [

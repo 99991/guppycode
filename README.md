@@ -34,11 +34,12 @@ guppy --url http://127.0.0.1:8080/v1/chat/completions
 
 * Tool calls are executed in a sandboxed environment within a Docker container that only allows access to the current directory and some NVIDIA files (see `run_bash.py`)
 * NVIDIA GPU passthrough (this probably opens up a container escape somewhere, but better than no sandbox at all)
-    * Notably, this does not use NVIDIA container toolkit, which failed to install on my system.
-    * Might not work on your system. Can be disabled with `guppy --no-nvidia`
+    * Activate with `guppy --nvidia`
+    * Notably, this does not use NVIDIA container toolkit, which failed to install on my system. Current method is somewhat unorthodox and might not work on your system.
 * Fuzzy matching for `str_replace` tool with Levenshtein distance
 * No weird TUI that hides most of what's going on and messes up scrolling
 * Tab file name completion
 * Readline input (i.e. Ctrl + W, Home and End keys work)
+* Plays a sound when done! (surprisingly nice)
 * Small codebase that can be read in a few minutes (<700 lines including blank lines)
 * No external dependencies (one of the main motivations for this project due to the recent increase in supply chain attacks)
