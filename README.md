@@ -18,14 +18,14 @@ Consider this repository mostly educational.
 ```bash
 git clone https://github.com/99991/GupPyCode.git
 cd GupPyCode
-./build_docker.sh
+./build_torchimage.sh
 ln -s "$PWD/gup.py" ~/.local/bin/guppy
 guppy
 ```
 
 For usage, see `guppy --help`
 
-Instead of running `./build_docker.sh` to build `torchimage`, you can also specify your own Docker image with `guppy --docker-image yourimage`
+Instead of running `./build_torchimage.sh`, you can also use your own Docker image with `guppy --docker-image yourimage`
 
 You can also run `python gup.py` directly instead of linking `guppy` into a directory on your `$PATH`.
 
