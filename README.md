@@ -12,11 +12,13 @@ Consider this repository mostly educational.
 
 # Installation
 
-Go to whichever directory you want to install it in and run
+1. Change the Python libraries in the `Dockerfile` to your liking.
+2. Go to whichever directory you want to install in and run
 
 ```bash
 git clone https://github.com/99991/GupPyCode.git
 cd GupPyCode
+./build_docker.sh
 ln -s "$PWD/gup.py" ~/.local/bin/guppy
 guppy
 ```
