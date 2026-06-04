@@ -47,5 +47,5 @@ guppy --url http://127.0.0.1:8080/v1/chat/completions
 * Tab file name completion
 * Readline input (i.e. Ctrl + W, Home and End keys work)
 * Plays a sound when done! (surprisingly nice)
-* Small codebase that can be read in a few minutes (<700 lines including blank lines)
+* Small codebase that can be read in a few minutes (<600 lines)
 * No external dependencies (one of the main motivations for this project due to the recent increase in supply chain attacks)
