@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-import json, time, tabcompletion, tools, sound, llm, prn
+import json, time, tabcompletion, tools, sound, llm, prn, sessions
 from config import args
 
 tabcompletion.activate()
 
-messages = [{"role": "system", "content": args.system_prompt}]
+session = sessions.Session(args.session)
+session.append({"role": "system", "content": args.system_prompt})
 cost, total_cost, tokens = 0, 0, 0
 
 def info(msg):
@@ -17,7 +18,7 @@ while True:
         prompt = input(">> ") if args.prompt is None else args.prompt
     except (KeyboardInterrupt, EOFError): break
 
-    messages.append({"role": "user", "content": prompt})
+    session.append({"role": "user", "content": prompt})
 
     start = time.perf_counter()
 
@@ -25,7 +26,7 @@ while True:
         for step in range(args.max_steps):
             info(f"Step {step + 1}")
 
-            response = llm.call_llm(messages)
+            response = llm.call_llm(session.get_messages())
 
             if "usage" in response:
                 tokens = response["usage"].get("total_tokens", 0)
@@ -35,7 +36,7 @@ while True:
             msg = response["choices"][0]["message"]
 
             # Append assistant message
-            messages.append(msg)
+            session.append(msg)
 
             tool_calls = msg.get("tool_calls")
 
@@ -62,7 +63,7 @@ while True:
                 info("Tool output")
                 prn.lightwhite(result)
 
-                messages.append({
+                session.append({
                     "role": "tool",
                     "tool_call_id": tool_call_id,
                     "content": result

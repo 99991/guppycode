@@ -1,6 +1,7 @@
 import os
 import prn
 import argparse
+from datetime import datetime
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", "-m", default="deepseek/deepseek-v4-flash", help="Model to use")
@@ -16,10 +17,21 @@ parser.add_argument("--nvidia", action="store_true", default=False, help="Enable
 parser.add_argument("--prompt", "-p", help="Prompt to run in single-shot non-interactive mode")
 parser.add_argument("--docker-image", default="torchimage", help="Docker image to use for sandboxed execution")
 parser.add_argument("--dangerous-no-sandbox", action="store_true", default=False, help="Enable NVIDIA GPU passthrough (default: sandboxed)")
+parser.add_argument("--session-dir", default="~/.local/share/guppycode/sessions", help="Default directory for sessions")
+parser.add_argument("--session-dir", default="~/.local/share/guppycode/sessions", help="Directory for sessions")
+parser.add_argument("--session", help="Full path to session file, ignores session dir")
 args = parser.parse_args()
 
 if args.model == "pro":
     args.model = "deepseek/deepseek-v4-pro"
+
+if not args.session:
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
+    disambiguator = os.urandom(16).hex() # avoid collisions (most of the time)
+    name = f"{timestamp}_{disambiguator}.jsonl"
+    args.session = os.path.join(args.session_dir, name)
+
+args.session = os.path.expanduser(args.session)
 
 prn.green("Config")
 for arg in vars(args):
