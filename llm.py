@@ -19,6 +19,9 @@ def call_llm(messages):
 
     headers = {
         "Content-Type": "application/json",
+        "HTTP-Referer": "https://github.com/99991/guppycode",
+        "X-OpenRouter-Title": "GupPyCode",
+        "X-OpenRouter-Categories": "cli-agent,programming-app,personal-agent",
     }
 
     if config.api_key:
