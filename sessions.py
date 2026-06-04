@@ -1,28 +1,15 @@
 import os
-import json
-
+import log
 
 class Session:
     def __init__(self, path):
         self.path = path
 
-    def _open_file(self, mode):
-        parent = os.path.dirname(self.path)
-
-        if parent:
-            os.makedirs(parent, exist_ok=True)
-
-        return open(self.path,mode)
-
     def append(self, message):
-        with self._open_file("a") as f:
-            f.seek(0, os.SEEK_END)
-            f.write(json.dumps(message) + "\n")
+        log.log(self.path, message)
 
     def get_messages(self):
-        with self._open_file("r") as f:
-            f.seek(0)
-            return [json.loads(line) for line in f if line]
+        return log.read(self.path)
 
 def test():
     disambiguator = os.urandom(32).hex()

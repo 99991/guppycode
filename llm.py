@@ -1,7 +1,11 @@
 import tools
 import config
+import log
 import json
+import os
+import log
 import urllib.request
+from datetime import datetime
 
 def call_llm(messages):
     payload = {
@@ -31,4 +35,12 @@ def call_llm(messages):
     req = urllib.request.Request(config.args.url, data=data, headers=headers, method="POST")
 
     with urllib.request.urlopen(req) as response:
-        return json.loads(response.read().decode("utf-8"))
+        result = json.loads(response.read().decode("utf-8"))
+        log.log(config.log_path, {
+            "request_data": payload,
+            "request_headers": {k: v for k, v in headers.items() if k != "Authorization"}, # Don't log secrets
+            "status": response.status,
+            "response_headers": dict(response.getheaders()),
+            "response_data": result,
+        })
+        return result

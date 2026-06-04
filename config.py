@@ -17,21 +17,25 @@ parser.add_argument("--nvidia", action="store_true", default=False, help="Enable
 parser.add_argument("--prompt", "-p", help="Prompt to run in single-shot non-interactive mode")
 parser.add_argument("--docker-image", default="torchimage", help="Docker image to use for sandboxed execution")
 parser.add_argument("--dangerous-no-sandbox", action="store_true", default=False, help="Enable NVIDIA GPU passthrough (default: sandboxed)")
-parser.add_argument("--session-dir", default="~/.local/share/guppycode/sessions", help="Default directory for sessions")
-parser.add_argument("--session-dir", default="~/.local/share/guppycode/sessions", help="Directory for sessions")
+parser.add_argument("--request-dir", default="~/.local/share/guppycode/requests/", help="Directory for HTTP requests")
+parser.add_argument("--session-dir", default="~/.local/share/guppycode/sessions/", help="Directory for sessions")
 parser.add_argument("--session", help="Full path to session file, ignores session dir")
 args = parser.parse_args()
 
 if args.model == "pro":
     args.model = "deepseek/deepseek-v4-pro"
 
-if not args.session:
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
-    disambiguator = os.urandom(16).hex() # avoid collisions (most of the time)
-    name = f"{timestamp}_{disambiguator}.jsonl"
-    args.session = os.path.join(args.session_dir, name)
+args.session_dir = os.path.expanduser(args.session_dir)
+args.request_dir = os.path.expanduser(args.request_dir)
 
-args.session = os.path.expanduser(args.session)
+def timestamped_file(directory, ext="jsonl"):
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
+    disambiguator = os.urandom(32).hex() # avoid collisions (most of the time)
+    name = f"{timestamp}_{disambiguator}.{ext}"
+    return os.path.join(directory, name)
+
+if not args.session:
+    args.session = timestamped_file(args.session_dir)
 
 prn.green("Config")
 for arg in vars(args):
@@ -43,5 +47,7 @@ for arg in vars(args):
                 prn.orange("WARNING: SANDBOX IS TURNED OFF!")
         else:
             print(f"    {arg:15}: {value}")
+
+log_path = timestamped_file(args.request_dir)
 
 api_key = os.environ.get("GUPPY_KEY")
