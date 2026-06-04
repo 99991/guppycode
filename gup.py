@@ -5,7 +5,12 @@ from config import args
 tabcompletion.activate()
 
 messages = [{"role": "system", "content": args.system_prompt}]
-total_cost = 0.0
+cost, total_cost, tokens = 0, 0, 0
+
+def info(msg):
+    prn.green(msg)
+    if tokens:
+        prn.green(f"Cost: ${cost:.6f}, Total: ${total_cost:.6f}, Tokens: {tokens}")
 
 while True:
     try:
@@ -18,14 +23,14 @@ while True:
 
     try:
         for step in range(args.max_steps):
-            prn.green(f"Step {step + 1}")
+            info(f"Step {step + 1}")
 
             response = llm.call_llm(messages)
 
-            if "cost" in response["usage"]:
-                cost = response["usage"]["cost"]
+            if response["usage"]:
+                tokens = response["usage"].get("total_tokens", 0)
+                cost = response["usage"].get("cost", 0)
                 total_cost += cost
-                prn.green(f"Cost: ${cost:.6f}, Total: ${total_cost:.6f}")
 
             msg = response["choices"][0]["message"]
 
@@ -37,7 +42,7 @@ while True:
             # If no tools -> final answer
             if not tool_calls:
                 if msg.get("content"):
-                    prn.green("Agent response:")
+                    info("Agent response")
                     print(msg["content"])
                 break
 
@@ -54,7 +59,7 @@ while True:
                 else:
                     result = f"Unknown tool: {fn_name}"
 
-                prn.green("Tool output:")
+                info("Tool output")
                 prn.lightwhite(result)
 
                 messages.append({
@@ -69,7 +74,7 @@ while True:
     except KeyboardInterrupt: pass
 
     dt = time.perf_counter() - start
-    prn.green(f"Finished in {dt:.2f}s")
+    info(f"Finished in {dt:.2f}s")
 
     sound.play_finish_sound()
 
