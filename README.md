@@ -1,7 +1,7 @@
 # GupPyCode
 
 <div align="center">
-<img width="535" height="334" alt="guppy2" src="https://github.com/user-attachments/assets/652bed3b-a11d-44ae-acaa-3b87dc6f6315" />
+<img width="535" height="334" alt="Orange guppy fish that looks a bit dumb" src="https://github.com/user-attachments/assets/652bed3b-a11d-44ae-acaa-3b87dc6f6315" />
 </div>
 
 This is mostly for my own use on Lubuntu 24.04 with weird defaults.
@@ -16,8 +16,8 @@ Consider this repository mostly educational.
 2. Go to whichever directory you want to install in and run
 
 ```bash
-git clone https://github.com/99991/GupPyCode.git
-cd GupPyCode
+git clone https://github.com/99991/guppycode.git
+cd guppycode
 ./build_torchimage.sh
 ln -s "$PWD/gup.py" ~/.local/bin/guppy
 guppy
