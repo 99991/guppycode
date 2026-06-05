@@ -29,15 +29,14 @@ nvidia_args = """
 -v /usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:ro
 -v /lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:ro
 -e CUDA_HOME=/usr/lib/cuda
--e PATH=/home/testuser/testenv/bin:/usr/lib/nvidia-cuda-toolkit/bin:/usr/lib/cuda/bin:/usr/bin:$PATH
+-e PATH=/home/testuser/testenv/bin:/usr/lib/nvidia-cuda-toolkit/bin:/usr/lib/cuda/bin:/usr/bin
 -e LD_LIBRARY_PATH=/usr/lib/cuda/lib64:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu
 """.strip().split()
 
 def run_bash(command_str: str, timeout: float = 30.0) -> str:
+    command = []
 
-    if config.args.dangerous_no_sandbox:
-        command = ["bash", "-c", command_str]
-    else:
+    if not config.args.dangerous_no_sandbox:
         current_directory = os.getcwd()
 
         sandboxing_args = [
@@ -64,15 +63,13 @@ def run_bash(command_str: str, timeout: float = 30.0) -> str:
         if config.args.nvidia:
             command += nvidia_args
 
-        command += [
-            config.args.docker_image,
-            "bash", "-ilc", command_str,
-        ]
+        command.append(config.args.docker_image)
+
+    command += ["bash", "-c", command_str]
 
     try:
         result = subprocess.run(command, capture_output=True, timeout=timeout)
     except subprocess.TimeoutExpired as e:
-        print(e)
         return f"ERROR: Command {command} took longer than allowed maximum time of {timeout} seconds and has been cancled."
 
     lines_to_remove = [
