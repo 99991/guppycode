@@ -12,20 +12,23 @@ Consider this repository mostly educational.
 
 # Installation
 
-1. Change the Python libraries in the `Dockerfile` to your liking.
+1. Change the Python libraries in `Dockerfiles/torch/Dockerfile` to your liking.
 2. Go to whichever directory you want to install in and run
 
 ```bash
 git clone https://github.com/99991/guppycode.git
 cd guppycode
-./build_torchimage.sh
+docker build \
+    --build-arg UID="$(id -u)" \
+    --build-arg GID="$(id -g)" \
+    -t torchimage Dockerfiles/torch
 ln -s "$PWD/gup.py" ~/.local/bin/guppy
 guppy
 ```
 
 For usage, see `guppy --help`
 
-Instead of running `./build_torchimage.sh`, you can also use your own Docker image with `guppy --docker-image yourimage`
+Instead of `torchimage`, you can choose your own Docker image with `guppy --docker-image yourimage` or the `Dockerfile/js` or `Dockerfile/go` image (untested).
 
 You can also run `python gup.py` directly instead of linking `guppy` into a directory on your `$PATH`.
 
