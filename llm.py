@@ -26,6 +26,7 @@ def call_llm(messages):
         "HTTP-Referer": "https://github.com/99991/guppycode",
         "X-OpenRouter-Title": "GupPyCode",
         "X-OpenRouter-Categories": "cli-agent,programming-app,personal-agent",
+        "User-Agent": config.args.user_agent,
     }
 
     if config.api_key:

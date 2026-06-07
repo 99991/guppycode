@@ -17,6 +17,7 @@ parser.add_argument("--nvidia", action="store_true", default=False, help="Enable
 parser.add_argument("--prompt", "-p", help="Prompt to run in single-shot non-interactive mode")
 parser.add_argument("--docker-image", default="torchimage", help="Docker image to use for sandboxed execution")
 parser.add_argument("--dangerous-no-sandbox", action="store_true", default=False, help="Enable NVIDIA GPU passthrough (default: sandboxed)")
+parser.add_argument("--user-agent", default="GupPyCode/0.1 (https://github.com/99991/guppycode)", help="User-Agent for API requests")
 parser.add_argument("--request-dir", default="~/.local/share/guppycode/requests/", help="Directory for HTTP requests")
 parser.add_argument("--session-dir", default="~/.local/share/guppycode/sessions/", help="Directory for sessions")
 parser.add_argument("--session", help="Full path to session file, ignores session dir")
