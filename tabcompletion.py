@@ -2,28 +2,36 @@ import os
 import readline
 
 def tab_completion(text, state):
-    path_parts = text.rsplit('/', 1)
-    if len(path_parts) == 1:
+    dir_path = os.path.dirname(text)
+    partial = os.path.basename(text)
+
+    if not dir_path:
         dir_path = '.'
-        partial = text
-    else:
-        dir_path, partial = path_parts
 
     try:
-        files = os.listdir(dir_path)
-    except FileNotFoundError:
+        entries = os.listdir(dir_path)
+    except (FileNotFoundError, NotADirectoryError, PermissionError):
         return None
 
-    matches = [f for f in files if f.startswith(partial)]
+    matches = [name for name in entries if name.startswith(partial)]
+
     matches = [
-        f + '/' if os.path.isdir(os.path.join(dir_path, f)) else f
-        for f in matches
+        name + '/' if os.path.isdir(os.path.join(dir_path, name)) else name
+        for name in matches
     ]
+
+    if dir_path != '.':
+        prefix = dir_path if dir_path.endswith('/') else dir_path + '/'
+        matches = [prefix + name for name in matches]
 
     if state < len(matches):
         return matches[state]
     return None
 
 def activate():
+    # Enable tab completion after 'subdir/'
+    delims = readline.get_completer_delims()
+    readline.set_completer_delims(delims.replace('/', ''))
+
     readline.set_completer(tab_completion)
     readline.parse_and_bind("tab: complete")
