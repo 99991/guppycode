@@ -10,6 +10,8 @@ nvidia_args = """
 --device /dev/nvidia-uvm
 --device /dev/nvidia-uvm-tools
 -v /usr/bin/nvcc:/usr/bin/nvcc:ro
+-v /usr/lib/nsight-compute:/usr/lib/nsight-compute:ro
+-v /usr/lib/x86_64-linux-gnu/nsight-compute:/usr/lib/x86_64-linux-gnu/nsight-compute:ro
 -v /usr/bin/cudafe++:/usr/bin/cudafe++:ro
 -v /usr/bin/ptxas:/usr/bin/ptxas:ro
 -v /usr/bin/fatbinary:/usr/bin/fatbinary:ro
@@ -29,7 +31,7 @@ nvidia_args = """
 -v /usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:ro
 -v /lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:ro
 -e CUDA_HOME=/usr/lib/cuda
--e PATH=/home/testuser/testenv/bin:/usr/lib/nvidia-cuda-toolkit/bin:/usr/lib/cuda/bin:/usr/bin
+-e PATH=/home/testuser/testenv/bin:/usr/lib/nsight-compute:/usr/lib/nvidia-cuda-toolkit/bin:/usr/lib/cuda/bin:/usr/bin
 -e LD_LIBRARY_PATH=/usr/lib/cuda/lib64:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu
 """.strip().split()
 
@@ -62,6 +64,9 @@ def run_bash(command_str: str, timeout: float = 30.0) -> str:
 
         if config.args.nvidia:
             command += nvidia_args
+
+        if config.args.docker_arg:
+            command += config.args.docker_arg
 
         command.append(config.args.docker_image)
 
