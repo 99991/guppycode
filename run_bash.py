@@ -44,7 +44,7 @@ def run_bash(command_str: str, timeout: float = 30.0) -> str:
             "--cap-drop=ALL",
             "--memory", "8192m",
             "--memory-swap", "8192m",
-            "--cpus=4",
+            "--cpus=1",
         ]
 
         if config.args.no_network:
