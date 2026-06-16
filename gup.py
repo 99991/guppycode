@@ -28,6 +28,8 @@ while True:
 
             response = llm.call_llm(session.get_messages())
 
+            if not response: break
+
             if "usage" in response:
                 tokens = response["usage"].get("total_tokens", 0)
                 cost = response["usage"].get("cost", 0)
