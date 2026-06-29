@@ -40,12 +40,15 @@ def str_replace(path: str, old_str: str, new_str: str):
         dist = compute_dist(lines[i:i + m], old_lines)
         dists[dist].append(i)
 
+    if not dists:
+        return "ERROR: old string not found in file"
+
     min_dist = min(dists)
     indices = dists[min_dist]
 
     if len(indices) > 1:
         # TODO line numbers
-        line_numbers = ", ".join(str(i + i) for i in indices)
+        line_numbers = ", ".join(str(i + 1) for i in indices)
         return f"ERROR: Multiple possible match positions at lines {line_numbers} with levenshtein distance {min_dist}"
 
     i, = indices
