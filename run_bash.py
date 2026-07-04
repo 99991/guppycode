@@ -35,7 +35,7 @@ nvidia_args = """
 -e LD_LIBRARY_PATH=/usr/lib/cuda/lib64:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu
 """.strip().split()
 
-def run_bash(command_str: str, timeout: float = 30.0) -> str:
+def run_bash(command_str: str) -> str:
     command = []
 
     if not config.args.dangerous_no_sandbox:
@@ -73,9 +73,9 @@ def run_bash(command_str: str, timeout: float = 30.0) -> str:
     command += ["bash", "-c", command_str]
 
     try:
-        result = subprocess.run(command, capture_output=True, timeout=timeout)
+        result = subprocess.run(command, capture_output=True, timeout=config.args.timeout)
     except subprocess.TimeoutExpired as e:
-        return f"ERROR: Command {command} took longer than allowed maximum time of {timeout} seconds and has been cancled."
+        return f"ERROR: Command {command} took longer than allowed maximum time of {config.args.timeout} seconds and has been canceled."
 
     lines_to_remove = [
         "bash: cannot set terminal process group (-1): Inappropriate ioctl for device",

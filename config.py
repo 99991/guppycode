@@ -12,6 +12,7 @@ parser.add_argument("--max-steps", type=int, default=100, help="Max agent loop s
 parser.add_argument("--max-lines", type=int, default=5000, help="Max lines to read from file or run_bash tool. Longer files are truncated")
 parser.add_argument("--max-line-length", type=int, default=1000, help="Max characters per line to read from file or run_bash tool. Longer lines are truncated")
 parser.add_argument("--system-prompt", default="You are inside an Ubuntu 24.04 docker container. Current directory is /work", help="System prompt")
+parser.add_argument("--timeout", type=float, default=60.0, help="Timeout in seconds for run_bash tool (default: 60.0)")
 parser.add_argument("--no-network", action="store_false", default=False, help="Disallow agent to access the network (default: allowed)")
 parser.add_argument("--nvidia", action="store_true", default=False, help="Enable NVIDIA GPU passthrough (default: disabled)")
 parser.add_argument("--prompt", "-p", help="Prompt to run in single-shot non-interactive mode")
