@@ -3,11 +3,19 @@ from read_file import read_file
 from write_file import write_file
 from str_replace import str_replace
 
+def tool_call(tool, names):
+    def wrapper(args):
+        # Complain if LLM hallucinated parameter names
+        if args.keys() != set(names):
+            return f"ERROR: Got args {list(args.keys())} but need args {names}"
+        return tool(*[args[name] for name in names])
+    return wrapper
+
 TOOL_MAP = {
-    "bash": lambda args: run_bash(args["command"]),
-    "read_file": lambda args: read_file(args["path"]),
-    "write_file": lambda args: write_file(args["path"], args["content"]),
-    "str_replace": lambda args: str_replace(args["path"], args["old_str"], args["new_str"]),
+    "bash": tool_call(run_bash, ["command"]),
+    "read_file": tool_call(read_file, ["path"]),
+    "write_file": tool_call(write_file, ["path", "content"]),
+    "str_replace": tool_call(str_replace, ["path", "old_str", "new_str"]),
 }
 
 TOOL_DEFINITIONS = [
