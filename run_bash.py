@@ -1,6 +1,7 @@
 import os
 import config
 import subprocess
+import shlex
 import truncate
 
 nvidia_args = """
@@ -66,7 +67,8 @@ def run_bash(command_str: str) -> str:
             command += nvidia_args
 
         if config.args.docker_arg:
-            command += config.args.docker_arg
+            for arg in config.args.docker_arg:
+                command += shlex.split(arg)
 
         command.append(config.args.docker_image)
 
