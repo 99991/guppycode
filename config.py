@@ -1,4 +1,5 @@
 import os
+import ast
 import prn
 import argparse
 from datetime import datetime
@@ -23,6 +24,7 @@ parser.add_argument("--user-agent", default="GupPyCode/0.1 (https://github.com/9
 parser.add_argument("--request-dir", default="~/.local/share/guppycode/requests/", help="Directory for HTTP requests")
 parser.add_argument("--session-dir", default="~/.local/share/guppycode/sessions/", help="Directory for sessions")
 parser.add_argument("--session", help="Full path to session file, ignores session dir")
+parser.add_argument("--reasoning", type=ast.literal_eval, default=None, help="Explicitly enable (or disable) reasoning with `--reasoning True` (or `False`)")
 args = parser.parse_args()
 
 if args.model == "pro":

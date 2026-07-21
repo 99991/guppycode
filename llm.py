@@ -23,6 +23,9 @@ def call_llm(messages):
             "allow_fallbacks": False,
         }
 
+    if config.args.reasoning is not None:
+        payload["reasoning"] = {"enabled": config.args.reasoning}
+
     headers = {
         "Content-Type": "application/json",
         "HTTP-Referer": "https://github.com/99991/guppycode",
