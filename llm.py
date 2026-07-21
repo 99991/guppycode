@@ -12,8 +12,10 @@ def call_llm(messages):
         "model": config.args.model,
         "messages": messages,
         "tools": tools.TOOL_DEFINITIONS,
-        "max_tokens": config.args.max_tokens,
     }
+
+    if config.args.max_tokens != -1:
+        payload["max_tokens"] = config.args.max_tokens
 
     if config.args.provider:
         payload["provider"] = {
