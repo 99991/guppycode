@@ -45,6 +45,7 @@ guppy --url http://127.0.0.1:8080/v1/chat/completions
 * NVIDIA GPU passthrough (this probably opens up a container escape somewhere, but better than no sandbox at all)
     * Activate with `guppy --nvidia`
     * Notably, this does not use NVIDIA container toolkit, which failed to install on my system. The current method is somewhat unorthodox and might not work on your system.
+* Image understanding support
 * Fuzzy matching for `str_replace` tool with Levenshtein distance
 * No weird TUI that hides most of what's going on and messes up scrolling
 * Tab file name completion
