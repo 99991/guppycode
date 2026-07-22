@@ -57,6 +57,7 @@ while True:
 
                 prn.orange(f"Tool call: {fn_name}, {json.dumps(tool_args, indent=4)}")
 
+                image_url = None
                 if fn_name in tools.TOOL_MAP:
                     result = tools.TOOL_MAP[fn_name](tool_args)
 
@@ -68,6 +69,7 @@ while True:
                         assert isinstance(result, dict) and result["type"] == "image"
                         path = tool_args["path"]
                         content = f"Read image {path}"
+                        image_url = result["data"]
                 else:
                     content = f"Unknown tool: {fn_name}"
                     info("Tool output")
@@ -79,10 +81,11 @@ while True:
                     "content": content,
                 })
 
-                if isinstance(result, dict) and result["type"] == "image":
-                    session.append({"role": "user",
+                if image_url is not None:
+                    session.append({
+                        "role": "user",
                         "content": [
-                            {"type": "image_url", "image_url": {"url": result["data"]}},
+                            {"type": "image_url", "image_url": {"url": image_url}},
                         ],
                     })
 
