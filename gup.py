@@ -58,17 +58,31 @@ while True:
                 prn.orange(f"Tool call: {fn_name}, {json.dumps(tool_args, indent=4)}")
 
                 if fn_name in tools.TOOL_MAP:
-                    result = tools.TOOL_MAP[fn_name](tool_args)
-                else:
-                    result = f"Unknown tool: {fn_name}"
+                    content = tools.TOOL_MAP[fn_name](tool_args)
 
-                info("Tool output")
-                prn.lightwhite(result)
+                    info("Tool output")
+
+                    if isinstance(content, dict) and content["type"] == "image":
+                        content = [
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": content["data"],
+                                }
+                            }
+                        ]
+                        prn.lightwhite(f"Read image {tool_args['path']}")
+                    else:
+                        prn.lightwhite(content)
+                else:
+                    content = f"Unknown tool: {fn_name}"
+                    info("Tool output")
+                    prn.lightwhite(content)
 
                 session.append({
                     "role": "tool",
                     "tool_call_id": tool_call_id,
-                    "content": result
+                    "content": content,
                 })
 
         else:

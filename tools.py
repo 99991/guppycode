@@ -37,7 +37,7 @@ TOOL_DEFINITIONS = [
         "type": "function",
         "function": {
             "name": "read_file",
-            "description": "Reads a file using cat.",
+            "description": "Reads text, png or jpg files.",
             "parameters": {
                 "type": "object",
                 "properties": {

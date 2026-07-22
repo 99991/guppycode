@@ -6,7 +6,7 @@ def write_file(path: str, content: str) -> str:
     parent_dir = os.path.dirname(path)
 
     if parent_dir:
-        run_bash(f"mkdir -p {parent_dir}")
+        run_bash(f"mkdir -p '{parent_dir}'")
 
     # Use cat with heredoc to write the file
     # Use a unique unpredictable delimiter that is probabilistically impossible to appear in output

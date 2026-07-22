@@ -36,7 +36,7 @@ nvidia_args = """
 -e LD_LIBRARY_PATH=/usr/lib/cuda/lib64:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu
 """.strip().split()
 
-def run_bash(command_str: str) -> str:
+def run_bash(command_str: str, limit: bool=True) -> str:
     command = []
 
     if not config.args.dangerous_no_sandbox:
@@ -96,7 +96,7 @@ def run_bash(command_str: str) -> str:
     if result.returncode != 0:
         output = f"[ERROR: exit code {result.returncode} for `{command_str}`]\n" + output
 
-    return truncate.truncate(output)
+    return truncate.truncate(output) if limit else output
 
 def test():
     assert run_bash("echo foo") == "foo\n"
