@@ -58,32 +58,33 @@ while True:
                 prn.orange(f"Tool call: {fn_name}, {json.dumps(tool_args, indent=4)}")
 
                 if fn_name in tools.TOOL_MAP:
-                    content = tools.TOOL_MAP[fn_name](tool_args)
+                    result = tools.TOOL_MAP[fn_name](tool_args)
 
                     info("Tool output")
 
-                    if isinstance(content, dict) and content["type"] == "image":
-                        content = [
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": content["data"],
-                                }
-                            }
-                        ]
-                        prn.lightwhite(f"Read image {tool_args['path']}")
+                    if isinstance(result, str):
+                        content = result
                     else:
-                        prn.lightwhite(content)
+                        assert isinstance(result, dict) and result["type"] == "image"
+                        path = tool_args["path"]
+                        content = f"Read image {path}"
                 else:
                     content = f"Unknown tool: {fn_name}"
                     info("Tool output")
-                    prn.lightwhite(content)
 
+                prn.lightwhite(content)
                 session.append({
                     "role": "tool",
                     "tool_call_id": tool_call_id,
                     "content": content,
                 })
+
+                if isinstance(result, dict) and result["type"] == "image":
+                    session.append({"role": "user",
+                        "content": [
+                            {"type": "image_url", "image_url": {"url": result["data"]}},
+                        ],
+                    })
 
         else:
             prn.red(f"ERROR: Max steps of {args.max_steps} reached.")
