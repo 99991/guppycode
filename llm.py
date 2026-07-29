@@ -103,11 +103,11 @@ def assemble_streaming_response(lines):
 
         for key, value in delta.items():
             if value is None: continue
-            if key in ["content", "reasoning", "reasoning_content"]:
+            if key in ["content", "reasoning", "reasoning_content", "audio_content"]:
                 message[key] += value
                 prn.white(value, end="", flush=True)
-            elif key == "role":
-                message["role"] = value
+            elif key in ["role", "name"]:
+                message[key] = value
             elif key == "tool_calls":
                 for tool_call in value:
                     index = tool_call.pop("index")
