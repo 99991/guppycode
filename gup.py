@@ -55,7 +55,8 @@ while True:
                 tool_args = json.loads(tool_call["function"]["arguments"])
                 tool_call_id = tool_call["id"]
 
-                prn.orange(f"Tool call: {fn_name}, {json.dumps(tool_args, indent=4)}")
+                if not args.stream:
+                    prn.orange(f"Tool call: {fn_name}, {json.dumps(tool_args, indent=4)}")
 
                 image_url = None
                 if fn_name in tools.TOOL_MAP:
@@ -74,7 +75,9 @@ while True:
                     content = f"Unknown tool: {fn_name}"
                     info("Tool output")
 
-                prn.lightwhite(content)
+                if not args.stream:
+                    prn.lightwhite(content)
+
                 session.append({
                     "role": "tool",
                     "tool_call_id": tool_call_id,

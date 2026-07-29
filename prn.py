@@ -11,32 +11,35 @@ termcolors = {
     "orange": "\033[38;5;208m",
 }
 
+def _print(color, text, **kwargs):
+    print(termcolors[color] + text + "\033[0m", **kwargs)
+
 def black(text, **kwargs):
-    print(termcolors["black"] + text + "\033[0m")
+    _print("black", text, **kwargs)
 
 def red(text, **kwargs):
-    print(termcolors["red"] + text + "\033[0m")
+    _print("red", text, **kwargs)
 
 def green(text, **kwargs):
-    print(termcolors["green"] + text + "\033[0m")
+    _print("green", text, **kwargs)
 
 def yellow(text, **kwargs):
-    print(termcolors["yellow"] + text + "\033[0m")
+    _print("yellow", text, **kwargs)
 
 def blue(text, **kwargs):
-    print(termcolors["blue"] + text + "\033[0m")
+    _print("blue", text, **kwargs)
 
 def magenta(text, **kwargs):
-    print(termcolors["magenta"] + text + "\033[0m")
+    _print("magenta", text, **kwargs)
 
 def cyan(text, **kwargs):
-    print(termcolors["cyan"] + text + "\033[0m")
+    _print("cyan", text, **kwargs)
 
 def white(text, **kwargs):
-    print(termcolors["white"] + text + "\033[0m")
+    _print("white", text, **kwargs)
 
 def lightwhite(text, **kwargs):
-    print(termcolors["lightwhite"] + text + "\033[0m")
+    _print("lightwhite", text, **kwargs)
 
 def orange(text, **kwargs):
-    print(termcolors["orange"] + text + "\033[0m")
+    _print("orange", text, **kwargs)
