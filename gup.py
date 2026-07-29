@@ -75,8 +75,7 @@ while True:
                     content = f"Unknown tool: {fn_name}"
                     info("Tool output")
 
-                if not args.stream:
-                    prn.lightwhite(content)
+                prn.cyan(content)
 
                 session.append({
                     "role": "tool",
