@@ -30,7 +30,7 @@ while True:
 
             if not response: break
 
-            if "usage" in response:
+            if response.get("usage"):
                 tokens = response["usage"].get("total_tokens", 0)
                 cost = response["usage"].get("cost", 0)
                 total_cost += cost
