@@ -25,6 +25,7 @@ parser.add_argument("--user-agent", default="GupPyCode/0.2 (https://github.com/9
 parser.add_argument("--request-dir", default="~/.local/share/guppycode/requests/", help="Directory for HTTP requests")
 parser.add_argument("--session-dir", default="~/.local/share/guppycode/sessions/", help="Directory for sessions")
 parser.add_argument("--session", help="Full path to session file, ignores session dir")
+parser.add_argument("--resume", action="store_true", default=None, help="Resumes the last session")
 parser.add_argument("--reasoning", type=ast.literal_eval, default=None, help="Explicitly enable (or disable) reasoning with `--reasoning True` (or `False`)")
 args = parser.parse_args()
 
@@ -39,6 +40,13 @@ def timestamped_file(directory, ext="jsonl"):
     disambiguator = os.urandom(32).hex() # avoid collisions (most of the time)
     name = f"{timestamp}_{disambiguator}.{ext}"
     return os.path.join(directory, name)
+
+if args.resume:
+    last_session = max(os.listdir(args.session_dir), default="")
+    if last_session:
+        args.session = os.path.join(args.session_dir, last_session)
+    else:
+        prn.orange(f"No session to resume in {args.session_dir}")
 
 if not args.session:
     args.session = timestamped_file(args.session_dir)
