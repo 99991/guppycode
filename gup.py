@@ -50,6 +50,7 @@ while True:
                 break
 
             # Execute tools
+            image_urls = []
             for tool_call in tool_calls:
                 fn_name = tool_call["function"]["name"]
                 tool_args = json.loads(tool_call["function"]["arguments"])
@@ -84,12 +85,16 @@ while True:
                 })
 
                 if image_url is not None:
-                    session.append({
-                        "role": "user",
-                        "content": [
-                            {"type": "image_url", "image_url": {"url": image_url}},
-                        ],
-                    })
+                    image_urls.append(image_url)
+
+            if image_urls:
+                session.append({
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": {"url": image_url}}
+                        for image_url in image_urls
+                    ],
+                })
 
         else:
             prn.red(f"ERROR: Max steps of {args.max_steps} reached.")
