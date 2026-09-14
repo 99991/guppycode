@@ -19,6 +19,7 @@ parser.add_argument("--nvidia", action="store_true", default=False, help="Enable
 parser.add_argument("--stream", type=ast.literal_eval, default=True, help="Stream LLM responses as they come in")
 parser.add_argument("--prompt", "-p", help="Prompt to run in single-shot non-interactive mode")
 parser.add_argument("--docker-image", default="torchimage", help="Docker image to use for sandboxed execution")
+parser.add_argument("--cpus", type=int, default=1, help="Number of CPUs for sandboxed execution (default: 1)")
 parser.add_argument("--docker-arg", "-d", action="append", help="Additional arguments for docker run, e.g. --docker-arg '-e FOO=bar' to set an environment variable")
 parser.add_argument("--dangerous-no-sandbox", action="store_true", default=False, help="Enable NVIDIA GPU passthrough (default: sandboxed)")
 parser.add_argument("--user-agent", default="GupPyCode/0.2 (https://github.com/99991/guppycode)", help="User-Agent for API requests")
