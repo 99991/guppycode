@@ -37,17 +37,18 @@ while True:
 
             msg = response["choices"][0]["message"]
 
-            # Append assistant message
-            session.append(msg)
-
             tool_calls = msg.get("tool_calls")
 
             # If no tools -> final answer
             if not tool_calls:
+                session.append(msg)
                 if msg.get("content"):
                     info("Agent response")
                     print(msg["content"])
                 break
+
+            # Buffer so we do not end up with incomplete tool calls on crash
+            session_buffer = [msg]
 
             # Execute tools
             image_urls = []
@@ -78,7 +79,7 @@ while True:
 
                 prn.cyan(content)
 
-                session.append({
+                session_buffer.append({
                     "role": "tool",
                     "tool_call_id": tool_call_id,
                     "content": content,
@@ -88,13 +89,16 @@ while True:
                     image_urls.append(image_url)
 
             if image_urls:
-                session.append({
+                session_buffer.append({
                     "role": "user",
                     "content": [
                         {"type": "image_url", "image_url": {"url": image_url}}
                         for image_url in image_urls
                     ],
                 })
+
+            for value in session_buffer:
+                session.append(value)
 
         else:
             prn.red(f"ERROR: Max steps of {args.max_steps} reached.")
