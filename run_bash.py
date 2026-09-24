@@ -51,8 +51,8 @@ def run_bash(command_str: str, limit: bool=True) -> str:
         sandboxing_args = [
             "--security-opt", "no-new-privileges",
             "--cap-drop=ALL",
-            "--memory", "8192m",
-            "--memory-swap", "8192m",
+            "--memory", config.args.memory,
+            "--memory-swap", config.args.memory,
             f"--cpus={config.args.cpus}",
         ]
 
