@@ -4,37 +4,16 @@ import subprocess
 import shlex
 import truncate
 
-nvidia_args = """
---device /dev/nvidia0
---device /dev/nvidiactl
---device /dev/nvidia-modeset
---device /dev/nvidia-uvm
---device /dev/nvidia-uvm-tools
--v /usr/bin/nvcc:/usr/bin/nvcc:ro
--v /usr/lib/nsight-compute:/usr/lib/nsight-compute:ro
--v /usr/lib/x86_64-linux-gnu/nsight-compute:/usr/lib/x86_64-linux-gnu/nsight-compute:ro
--v /usr/bin/cudafe++:/usr/bin/cudafe++:ro
--v /usr/bin/ptxas:/usr/bin/ptxas:ro
--v /usr/bin/fatbinary:/usr/bin/fatbinary:ro
--v /usr/bin/nvlink:/usr/bin/nvlink:ro
--v /usr/bin/cuobjdump:/usr/bin/cuobjdump:ro
--v /usr/bin/nvprune:/usr/bin/nvprune:ro
--v /usr/bin/nvdisasm:/usr/bin/nvdisasm:ro
--v /usr/bin/gcc-12:/usr/bin/gcc-12:ro
--v /usr/bin/g++-12:/usr/bin/g++-12:ro
--v /usr/lib/gcc:/usr/lib/gcc:ro
--v /usr/include/c++/12:/usr/include/c++/12:ro
--v /usr/include/x86_64-linux-gnu/c++/12:/usr/include/x86_64-linux-gnu/c++/12:ro
--v /usr/lib/nvidia-cuda-toolkit:/usr/lib/nvidia-cuda-toolkit:ro
--v /usr/lib/cuda:/usr/lib/cuda:ro
--v /usr/include:/usr/include:ro
--v /usr/bin/nvidia-smi:/usr/bin/nvidia-smi:ro
--v /usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:ro
--v /lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:ro
--e CUDA_HOME=/usr/lib/cuda
--e PATH=/home/testuser/testenv/bin:/usr/lib/nsight-compute:/usr/lib/nvidia-cuda-toolkit/bin:/usr/lib/cuda/bin:/usr/bin
--e LD_LIBRARY_PATH=/usr/lib/cuda/lib64:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu
-""".strip().split()
+nvidia_args_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nvidia.txt")
+
+if config.args.nvidia_args:
+    nvidia_args_path = config.args.nvidia_args
+
+with open(nvidia_args_path) as f:
+    nvidia_args = []
+    for line in f:
+        if line.strip():
+            nvidia_args.extend(line.strip().split(maxsplit=1))
 
 if config.args.remote:
     if not config.args.sshkey:

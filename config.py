@@ -29,6 +29,7 @@ parser.add_argument("--session", help="Full path to session file, ignores sessio
 parser.add_argument("--remote", help="username@hostname for ssh remote execution (requires --sshkey being set)")
 parser.add_argument("--sshkey", help="Full path to ssh key file (only used for --remote)")
 parser.add_argument("--directory", help="Directory for sandbox directory (uses current directory by default)")
+parser.add_argument("--nvidia-args", help="Path to file with extra docker args for NVIDIA containers")
 parser.add_argument("--resume", action="store_true", default=None, help="Resumes the last session")
 parser.add_argument("--args-dict", type=json.loads, default=None, help="Extra args to be merged into request dict like e.g. --args-dict '{\"temperature\": 0.7, \"seed\": 0}'")
 args = parser.parse_args()
