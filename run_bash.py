@@ -36,11 +36,38 @@ nvidia_args = """
 -e LD_LIBRARY_PATH=/usr/lib/cuda/lib64:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu
 """.strip().split()
 
+if config.args.remote:
+    if not config.args.sshkey:
+        print("--remote requires --sshkey <path>")
+        exit(1)
+
+    if not config.args.directory:
+        print("--remote requires --directory <path>")
+        exit(1)
+
+    try:
+        import paramiko
+    except ImportError:
+        print("--remote requires\n\n\tpip install paramiko")
+        exit(1)
+
+    username, host = config.args.remote.split("@")
+
+    client = paramiko.SSHClient()
+    client.load_system_host_keys()
+    client.connect(
+        host,
+        username=username,
+        key_filename=config.args.sshkey,
+        allow_agent=False,
+        look_for_keys=False,
+    )
+
 def run_bash(command_str: str, limit: bool=True) -> str:
     command = []
 
     if not config.args.dangerous_no_sandbox:
-        current_directory = os.getcwd()
+        directory = config.args.directory if config.args.directory else os.getcwd()
 
         sandboxing_args = [
             "--security-opt", "no-new-privileges",
@@ -57,7 +84,7 @@ def run_bash(command_str: str, limit: bool=True) -> str:
             "docker",
             "run",
             "--rm",
-            "--volume", current_directory + ":/work",
+            "--volume", directory + ":/work",
             "-w", "/work",
         ]
 
@@ -74,27 +101,37 @@ def run_bash(command_str: str, limit: bool=True) -> str:
 
     command += ["bash", "-c", command_str]
 
-    try:
-        result = subprocess.run(command, capture_output=True, timeout=config.args.timeout)
-    except subprocess.TimeoutExpired as e:
-        return f"ERROR: Command {command} took longer than allowed maximum time of {config.args.timeout} seconds and has been canceled."
+    if config.args.remote:
+        command = " ".join(shlex.quote(arg) for arg in command)
+        stdin, stdout, stderr = client.exec_command(command, timeout=config.args.timeout)
+        stdin.close()
+
+        stdout_text = stdout.read().decode("utf-8", errors="replace")
+        stderr_text = stderr.read().decode("utf-8", errors="replace")
+
+        returncode = stdout.channel.recv_exit_status()
+    else:
+        try:
+            result = subprocess.run(command, capture_output=True, timeout=config.args.timeout)
+            stdout_text = result.stdout.decode("utf-8", errors="replace")
+            stderr_text = result.stderr.decode("utf-8", errors="replace")
+            returncode = result.returncode
+        except subprocess.TimeoutExpired as e:
+            return f"ERROR: Command {command} took longer than allowed maximum time of {config.args.timeout} seconds and has been canceled."
 
     lines_to_remove = [
         "bash: cannot set terminal process group (-1): Inappropriate ioctl for device",
         "bash: no job control in this shell",
     ]
 
-    stdout = result.stdout.decode("utf-8", errors="replace")
-    stderr = result.stderr.decode("utf-8", errors="replace")
-
-    lines = (stdout + stderr).split("\n")
+    lines = (stdout_text + stderr_text).split("\n")
 
     lines = [line for line in lines if line not in lines_to_remove]
 
     output = "\n".join(lines)
 
-    if result.returncode != 0:
-        output = f"[ERROR: exit code {result.returncode} for `{command_str}`]\n" + output
+    if returncode != 0:
+        output = f"[ERROR: exit code {returncode} for `{command_str}`]\n" + output
 
     return truncate.truncate(output) if limit else output
 
