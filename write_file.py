@@ -1,12 +1,13 @@
 from run_bash import run_bash
 import os
+import shlex
 
 def write_file(path: str, content: str) -> str:
     # Create parent directories if they don't exist
     parent_dir = os.path.dirname(path)
 
     if parent_dir:
-        run_bash(f"mkdir -p '{parent_dir}'")
+        run_bash(f"mkdir -p {shlex.quote(parent_dir)}")
 
     # Use cat with heredoc to write the file
     # Use a unique unpredictable delimiter that is probabilistically impossible to appear in output
@@ -16,7 +17,7 @@ def write_file(path: str, content: str) -> str:
     if not content.endswith("\n"):
         content += "\n"
 
-    run_bash(f"cat << '{delimiter}' > {path}\n{content}{delimiter}")
+    run_bash(f"cat << '{delimiter}' > {shlex.quote(path)}\n{content}{delimiter}")
     return f"Wrote file: {path}"
 
 def test():
