@@ -5,7 +5,8 @@ from config import args
 tabcompletion.activate()
 
 session = sessions.Session(args.session)
-session.append({"role": "system", "content": args.system_prompt})
+if len(session.get_messages()) == 0:
+    session.append({"role": "system", "content": args.system_prompt})
 cost, total_cost, tokens = 0, 0, 0
 
 def info(msg):

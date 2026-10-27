@@ -9,7 +9,10 @@ class Session:
         log.log(self.path, message)
 
     def get_messages(self):
-        return log.read(self.path)
+        try:
+            return log.read(self.path)
+        except FileNotFoundError:
+            return []
 
 def test():
     disambiguator = os.urandom(32).hex()
