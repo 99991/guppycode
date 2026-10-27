@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import json, time, tabcompletion, tools, sound, llm, prn, sessions
+import json, time, tabcompletion, tools, sound, llm, prn, sessions, traceback, urllib.error
 from config import args
 
 tabcompletion.activate()
@@ -27,7 +27,18 @@ while True:
         for step in range(args.max_steps):
             info(f"Step {step + 1}")
 
-            response = llm.call_llm(session.get_messages())
+            for retry in range(args.max_retries):
+                try:
+                    response = llm.call_llm(session.get_messages())
+                    break
+                except urllib.error.URLError:
+                    traceback.print_exc()
+                    if retry != args.max_retries:
+                        timeout = min(10**retry, 60)
+                        prn.red(f"Trying again in {timeout} seconds")
+                        time.sleep(timeout)
+            else:
+                break
 
             if not response: break
 

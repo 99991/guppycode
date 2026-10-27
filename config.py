@@ -12,6 +12,7 @@ parser.add_argument("--url", default="https://openrouter.ai/api/v1/chat/completi
 parser.add_argument("--max-steps", type=int, default=500, help="Max agent loop steps")
 parser.add_argument("--max-lines", type=int, default=5000, help="Max lines to read from file or run_bash tool. Longer files are truncated")
 parser.add_argument("--max-line-length", type=int, default=1000, help="Max characters per line to read from file or run_bash tool. Longer lines are truncated")
+parser.add_argument("--max-retries", type=int, default=3, help="Maximum retries on failed connection")
 parser.add_argument("--system-prompt", default="You are inside an Ubuntu 24.04 docker container. Only the current directory /work will be persisted between calls", help="System prompt")
 parser.add_argument("--memory", default="8192m", help="Memory limit for Docker container")
 parser.add_argument("--timeout", type=float, default=60.0, help="Timeout in seconds for run_bash tool (default: 60.0)")
